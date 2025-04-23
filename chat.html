@@ -5,10 +5,19 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Email Grader Assistant</title>
   <style>
+    .feedback-section {
+  margin-bottom: 20px;
+  padding: 15px;
+  background: #ffffffcc;
+  border-left: 4px solid #0070f3;
+  border-radius: 6px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+}
     body {
       font-family: sans-serif;
       background: #f5f5f5;
       padding: 30px;
+      background: transparent !important;
     }
     #chatbox {
       background: white;
@@ -79,41 +88,47 @@
   </div>
 
   <script>
-    async function sendToAssistant() {
-  const email = document.getElementById("email").value;
-  const subject = document.getElementById("subject").value;
-  const preview = document.getElementById("preview").value;
-  const body = document.getElementById("body").value;
-  const screenshotInput = document.getElementById("screenshot");
-  const feedback = document.getElementById("feedback");
+<script>
+  async function sendToAssistant() {
+    const email = document.getElementById("email").value;
+    const subject = document.getElementById("subject").value;
+    const preview = document.getElementById("preview").value;
+    const body = document.getElementById("body").value;
+    const screenshotInput = document.getElementById("screenshot");
+    const feedback = document.getElementById("feedback");
 
-  feedback.innerHTML = "🧠 Analyzing your email...";
+    feedback.innerHTML = "🧠 Analyzing your email...";
 
-  const formData = new FormData();
-  formData.append("email", email);
-  formData.append("subject", subject);
-  formData.append("preview", preview);
-  formData.append("body", body);
-  if (screenshotInput.files.length > 0) {
-    formData.append("screenshot", screenshotInput.files[0]);
+    const formData = new FormData();
+    formData.append("email", email);
+    formData.append("subject", subject);
+    formData.append("preview", preview);
+    formData.append("body", body);
+    if (screenshotInput.files.length > 0) {
+      formData.append("screenshot", screenshotInput.files[0]);
+    }
+
+    try {
+      const res = await fetch("https://hook.us1.make.com/YOUR-MAKE-WEBHOOK-ID", {
+        method: "POST",
+        body: formData
+      });
+
+      const raw = await res.text();
+      console.log("Raw response:", raw);
+
+      // Format response into sections using line breaks
+      const formatted = raw
+        .split("\n\n")
+        .map(section => `<div class="feedback-section">${section.replace(/\n/g, "<br>")}</div>`)
+        .join("");
+
+      feedback.innerHTML = `<strong>AI Feedback:</strong><br><br>${formatted}`;
+    } catch (err) {
+      console.error("Fetch error:", err);
+      feedback.innerHTML = `<p style="color:red;">❌ There was an error processing your request.</p>`;
+    }
   }
-
-  try {
-    const res = await fetch("https://hook.us2.make.com/j7o5q5ro62u1zx6ahzmgd0s4b4oq8c3a", {
-      method: "POST",
-      body: formData
-    });
-
-    const raw = await res.text(); // Don’t parse as JSON
-    console.log("Raw response (as text):", raw);
-
-    // Inject the raw response directly as HTML into the page
-    feedback.innerHTML = `<strong>AI Feedback:</strong><br><br>${raw}`;
-  } catch (err) {
-    console.error("Fetch error:", err);
-    feedback.innerHTML = `<p style="color:red;">❌ There was an error processing your request.</p>`;
-  }
-}
   </script>
 
 </body>
