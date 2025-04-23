@@ -85,50 +85,71 @@
     <button onclick="sendToAssistant()">Send for Review</button>
 
     <div id="feedback"></div>
+
+    <button id="downloadBtn" style="display: none; margin-top: 10px;">
+  ⬇️ Download Results
+</button>
   </div>
 
   <script>
-  async function sendToAssistant() {
-    const email = document.getElementById("email").value;
-    const subject = document.getElementById("subject").value;
-    const preview = document.getElementById("preview").value;
-    const body = document.getElementById("body").value;
-    const screenshotInput = document.getElementById("screenshot");
-    const feedback = document.getElementById("feedback");
+ let lastRawResponse = ""; // Add this outside the function if needed
 
-    feedback.innerHTML = "🧠 Analyzing your email...";
+async function sendToAssistant() {
+  const email = document.getElementById("email").value;
+  const subject = document.getElementById("subject").value;
+  const preview = document.getElementById("preview").value;
+  const body = document.getElementById("body").value;
+  const screenshotInput = document.getElementById("screenshot");
+  const feedback = document.getElementById("feedback");
+  const downloadBtn = document.getElementById("downloadBtn");
 
-    const formData = new FormData();
-    formData.append("email", email);
-    formData.append("subject", subject);
-    formData.append("preview", preview);
-    formData.append("body", body);
-    if (screenshotInput.files.length > 0) {
-      formData.append("screenshot", screenshotInput.files[0]);
-    }
+  feedback.innerHTML = "🧠 Analyzing your email...";
+  downloadBtn.style.display = "none";
 
-    try {
-      const res = await fetch("https://hook.us2.make.com/j7o5q5ro62u1zx6ahzmgd0s4b4oq8c3a", {
-        method: "POST",
-        body: formData
-      });
-
-      const raw = await res.text();
-      console.log("Raw response:", raw);
-
-      // Format response into sections using line breaks
-      const formatted = raw
-        .split("\n\n")
-        .map(section => `<div class="feedback-section">${section.replace(/\n/g, "<br>")}</div>`)
-        .join("");
-
-      feedback.innerHTML = `<strong>Here's Your Email Audit:</strong><br><br>${formatted}`;
-    } catch (err) {
-      console.error("Fetch error:", err);
-      feedback.innerHTML = `<p style="color:red;">❌ There was an error processing your request.</p>`;
-    }
+  const formData = new FormData();
+  formData.append("email", email);
+  formData.append("subject", subject);
+  formData.append("preview", preview);
+  formData.append("body", body);
+  if (screenshotInput.files.length > 0) {
+    formData.append("screenshot", screenshotInput.files[0]);
   }
+
+  try {
+    const res = await fetch("https://hook.us2.make.com/j7o5q5ro62u1zx6ahzmgd0s4b4oq8c3a", {
+      method: "POST",
+      body: formData
+    });
+
+    const raw = await res.text();
+    lastRawResponse = raw;
+    console.log("Raw response:", raw);
+
+    const formatted = raw
+      .split("\n\n")
+      .map(section => `<div class="feedback-section">${section.replace(/\n/g, "<br>")}</div>`)
+      .join("");
+
+    feedback.innerHTML = `<strong>AI Feedback:</strong><br><br>${formatted}`;
+    downloadBtn.style.display = "inline-block";
+
+  } catch (err) {
+    console.error("Fetch error:", err);
+    feedback.innerHTML = `<p style="color:red;">❌ There was an error processing your request.</p>`;
+  }
+}
   </script>
+  <script>
+  document.getElementById("downloadBtn").addEventListener("click", () => {
+    const blob = new Blob([lastRawResponse], { type: "text/plain" });
+    const link = document.createElement("a");
+    link.href = URL.createObjectURL(blob);
+    link.download = "ai-email-feedback.txt";
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  });
+</script>
 
 </body>
 </html>
