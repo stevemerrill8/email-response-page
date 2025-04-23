@@ -4,6 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Email Grader Assistant</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
   <style>
     .feedback-section {
   margin-bottom: 20px;
@@ -60,6 +61,41 @@
       font-family: monospace;
       white-space: pre-wrap;
     }
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
+
+body {
+  font-family: 'Poppins', sans-serif;
+  background: #f5f5f5;
+}
+
+.feedback-wrapper {
+  background: #fff;
+  padding: 25px;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0,0,0,0.05);
+  font-size: 1rem;
+}
+
+.feedback-section {
+  margin-bottom: 20px;
+}
+
+.feedback-section h3 {
+  color: #333;
+  margin-bottom: 10px;
+  font-size: 1.1rem;
+}
+
+.feedback-section p,
+.feedback-section ul {
+  margin: 0;
+  padding: 0 0 10px 0;
+}
+
+.feedback-section ul {
+  list-style: disc inside;
+  color: #0070f3;
+}
   </style>
 </head>
 <body>
@@ -125,12 +161,15 @@ async function sendToAssistant() {
     lastRawResponse = raw;
     console.log("Raw response:", raw);
 
-    const formatted = raw
-      .split("\n\n")
-      .map(section => `<div class="feedback-section">${section.replace(/\n/g, "<br>")}</div>`)
-      .join("");
+const formatted = raw
+  .replace(/⭐ (.*?)\n/g, `<div class="feedback-section"><h3>⭐ Strategy</h3><p>`)
+  .replace(/✍️ (.*?)\n/g, `</p><h3>✍️ Copy</h3><p>`)
+  .replace(/🎨 (.*?)\n/g, `</p><h3>🎨 Design</h3><p>`)
+  .replace(/✅ Recommendations:\n/g, `</p><h3>✅ Recommendations</h3><ul>`)
+  .replace(/\d+\.\s(.*)/g, `<li>$1</li>`)
+  .replace(/\n/g, "<br>") + "</ul>";
 
-    feedback.innerHTML = `<strong>Here's Your Audit Results:</strong><br><br>${formatted}`;
+feedback.innerHTML = `<div class="feedback-wrapper">${formatted}</div>`;
     downloadBtn.style.display = "inline-block";
 
   } catch (err) {
