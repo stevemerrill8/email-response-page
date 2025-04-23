@@ -6,127 +6,63 @@
   <title>Email Grader Assistant</title>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
   <style>
-    .feedback-section {
-  margin-bottom: 20px;
-  padding: 15px;
-  background: #ffffffcc;
-  border-left: 4px solid #0070f3;
-  border-radius: 6px;
-  box-shadow: 0 1px 3px rgba(0,0,0,0.05);
-}
-    body {
-      font-family: 'Poppins', sans-serif;
-      background: #f5f5f5;
-      padding: 30px;
-      background: transparent !important;
-    }
-    #chatbox {
-      background: white;
-      padding: 30px;
-      border-radius: 10px;
-      box-shadow: 0 0 10px rgba(0,0,0,0.1);
-      max-width: 700px;
-      margin: auto;
-    }
-    label {
-      display: block;
-      margin: 10px 0 5px;
-      font-weight: bold;
-    }
-    input, textarea {
-      width: 100%;
-      padding: 10px;
-      border: 1px solid #ddd;
-      border-radius: 6px;
-      font-size: 1rem;
-    }
-    button {
-      margin-top: 20px;
-      background: #0070f3;
-      color: white;
-      padding: 12px 20px;
-      border: none;
-      border-radius: 6px;
-      cursor: pointer;
-      font-size: 1rem;
-    }
-    button:hover {
-      background: #005edb;
-    }
-    #feedback {
-      margin-top: 30px;
-      background: #f9f9f9;
-      padding: 20px;
-      border-radius: 6px;
-      font-family: monospace;
-      white-space: pre-wrap;
-    }
-    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
 
 body {
   font-family: 'Poppins', sans-serif;
-  background: #f5f5f5;
+  background: transparent;
+  margin: 0;
+  padding: 30px;
 }
 
 .feedback-wrapper {
   background: #fff;
-  padding: 25px;
-  border-radius: 10px;
-  box-shadow: 0 0 10px rgba(0,0,0,0.05);
+  padding: 30px;
+  border-radius: 12px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.05);
+  line-height: 1.75;
   font-size: 1rem;
-}
-
-.feedback-section {
-  margin-bottom: 20px;
-}
-
-.feedback-section h3 {
   color: #333;
-  margin-bottom: 10px;
-  font-size: 1.1rem;
-}
-
-.feedback-section p,
-.feedback-section ul {
-  margin: 0;
-  padding: 0 0 10px 0;
-}
-
-.feedback-section ul {
-  list-style: disc inside;
-  color: #0070f3;
-}
-
-    .feedback-wrapper {
-  background: #fff;
-  padding: 25px;
-  border-radius: 10px;
-  font-family: 'Poppins', sans-serif;
-  box-shadow: 0 1px 6px rgba(0,0,0,0.05);
-  line-height: 1.6;
-  font-size: 1rem;
 }
 
 .feedback-wrapper h3 {
-  font-size: 1.2rem;
-  margin-top: 20px;
-  margin-bottom: 10px;
-  color: #222;
+  font-size: 1.25rem;
+  margin-top: 32px;
+  margin-bottom: 12px;
   border-left: 4px solid #0070f3;
-  padding-left: 10px;
+  padding-left: 14px;
+  color: #111;
 }
 
 .feedback-wrapper p {
-  margin: 0 0 10px 0;
+  margin-bottom: 16px;
 }
 
-.fixes-list {
-  margin-left: 0;
-  padding-left: 20px;
+.feedback-wrapper .score-summary {
+  font-weight: 600;
+  margin-top: 10px;
+  margin-bottom: 20px;
+  font-size: 1rem;
 }
 
-.fixes-list li {
-  margin-bottom: 12px;
+.fix-section {
+  background: #f9fafe;
+  padding: 20px;
+  border-radius: 10px;
+  border-left: 4px solid #0070f3;
+  margin-bottom: 16px;
+}
+
+.fix-section h4 {
+  font-size: 1.05rem;
+  margin-bottom: 8px;
+  color: #333;
+}
+
+.fix-section p {
+  margin: 0;
+  font-size: 0.95rem;
+  color: #444;
 }
   </style>
 </head>
@@ -194,24 +130,27 @@ async function sendToAssistant() {
     console.log("Raw response:", raw);
 
 const formatted = raw
-  // Convert headers
-  .replace("🧠 The Idea", `<h3>🧠 The Idea</h3>`)
-  .replace("✍️ Copy", `<h3>✍️ Copy</h3>`)
-  .replace("🎨 Design", `<h3>🎨 Design</h3>`)
-  .replace("Overall Score:", `</p><h3>📊 Overall Score</h3><p><strong>`)
-  .replace("### Fixes to Improve Opens, Clicks, and Conversions:", `</p><h3>🔧 Fixes to Improve Opens, Clicks & Conversions</h3><ul class="fixes-list">`)
-  
-  // Convert bullet point fixes into <li> items
-  .replace(/\n- \*\*(.*?)\*\*/g, `<li><strong>$1</strong><ul>`)
-  .replace(/\n- /g, `<li>`)
-  .replace(/\n/g, `</li><li>`) // split multiline bullets
-  .replace(/<\/li><li>$/, `</li>`) // cleanup trailing
-  .replace(/<\/ul><li>/g, `</ul><li>`) // fix nested
-  .replace(/<\/li><\/li>/g, `</li>`) // cleanup extra closing
-  .replace(/\*\*/g, "") // clean up unprocessed markdown asterisks
+  .replace(/🧠 The Idea/g, `<h3>🧠 The Idea</h3>`)
+  .replace(/✍️ The Copy/g, `<h3>✍️ The Copy</h3>`)
+  .replace(/🎨 The Design/g, `<h3>🎨 The Design</h3>`)
+  .replace(/📊 Overall Score/g, `<h3>📊 Overall Score</h3>`)
+  .replace(/🔧 Fixes to Improve Opens, Clicks & Conversions/g, `<h3>🔧 Fixes to Improve Opens, Clicks & Conversions</h3>`)
 
-  // Wrap everything cleanly
-  .concat("</li></ul>"); // close final list
+  // Remove orphan bullets
+  .replace(/\n•/g, '')
+  .replace(/^•\s*/gm, '')
+
+  // Fix extra line breaks
+  .replace(/\n\n/g, '</p><p>')
+  .replace(/\n/g, '<br>')
+
+  // Highlight overall score summary
+  .replace(/(\d{1,2}\/15 –.*?)<br>/, `<p class="score-summary">$1</p>`)
+
+  // Format fixes section into styled blocks
+  .replace(/(\d+\.\s)(.*?)\n\s*–\s(.*?)\n/g, (_, num, title, detail) => {
+    return `<div class="fix-section"><h4>${num}${title}</h4><p>${detail}</p></div>`;
+  });
 
 feedback.innerHTML = `<div class="feedback-wrapper">${formatted}</div>`;
     downloadBtn.style.display = "inline-block";
