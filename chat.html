@@ -99,27 +99,32 @@
       }
 
       try {
-  const res = await fetch("https://hook.us2.make.com/j7o5q5ro62u1zx6ahzmgd0s4b4oq8c3a", {
-    method: "POST",
-    body: formData
-  });
+        const res = await fetch("https://hook.us2.make.com/j7o5q5ro62u1zx6ahzmgd0s4b4oq8c3a", {
+          method: "POST",
+          body: formData
+        });
 
-  const text = await res.text(); // Get raw response first
-  console.log("Raw response text:", text);
+        const raw = await res.text(); // Get raw response for debugging
+        console.log("Raw response:", raw);
 
-  // Try to parse as JSON
-  const data = JSON.parse(text);
-  console.log("Parsed JSON:", data);
+        try {
+          const data = JSON.parse(raw);
+          console.log("Parsed JSON:", data);
 
-  if (data.feedback) {
-    feedback.innerHTML = `<strong>Feedback:</strong><br>${data.feedback}`;
-  } else {
-    feedback.innerHTML = `<p style="color:red;">No feedback returned.</p>`;
-  }
-} catch (err) {
-  console.error("Fetch/Parse Error:", err);
-  feedback.innerHTML = `<p style="color:red;">❌ There was an error processing your request.</p>`;
-}
+          if (data.feedback) {
+            feedback.innerHTML = `<strong>Feedback:</strong><br>${data.feedback}`;
+          } else {
+            feedback.innerHTML = `<p style="color:red;">⚠️ No feedback returned. Check webhook response.</p>`;
+          }
+        } catch (parseError) {
+          console.error("JSON Parse Error:", parseError);
+          feedback.innerHTML = `<p style="color:red;">❌ Failed to parse response. Check your webhook output format.</p>`;
+        }
+
+      } catch (err) {
+        console.error("Fetch Error:", err);
+        feedback.innerHTML = `<p style="color:red;">❌ There was an error sending your request. Please try again later.</p>`;
+      }
     }
   </script>
 
