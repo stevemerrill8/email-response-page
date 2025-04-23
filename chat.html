@@ -99,18 +99,27 @@
       }
 
       try {
-        const res = await fetch("https://hook.us2.make.com/j7o5q5ro62u1zx6ahzmgd0s4b4oq8c3a", {
-          method: "POST",
-          body: formData
-        });
+  const res = await fetch("https://hook.us2.make.com/j7o5q5ro62u1zx6ahzmgd0s4b4oq8c3a", {
+    method: "POST",
+    body: formData
+  });
 
-        const data = await res.json();
-        feedback.innerHTML = `<strong>Feedback:</strong><br>${data.feedback || 'No feedback returned.'}`;
-      } catch (err) {
-        console.error(err);
-        feedback.innerHTML = "❌ There was an error processing your request.";
-      }
-    }
+  const text = await res.text(); // Get raw response first
+  console.log("Raw response text:", text);
+
+  // Try to parse as JSON
+  const data = JSON.parse(text);
+  console.log("Parsed JSON:", data);
+
+  if (data.feedback) {
+    feedback.innerHTML = `<strong>Feedback:</strong><br>${data.feedback}`;
+  } else {
+    feedback.innerHTML = `<p style="color:red;">No feedback returned.</p>`;
+  }
+} catch (err) {
+  console.error("Fetch/Parse Error:", err);
+  feedback.innerHTML = `<p style="color:red;">❌ There was an error processing your request.</p>`;
+}
   </script>
 
 </body>
