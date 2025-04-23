@@ -2,176 +2,253 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Email Grader Assistant</title>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet" />
   <style>
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: transparent;
+      margin: 0;
+      padding: 40px;
+    }
 
-body {
-  font-family: 'Poppins', sans-serif;
-  background: transparent;
-  margin: 0;
-  padding: 30px;
-}
+    #chatbox {
+      max-width: 800px;
+      background: #fff;
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 0 12px rgba(0, 0, 0, 0.06);
+      margin: auto;
+    }
 
-.feedback-wrapper {
-  background: #fff;
-  padding: 30px;
-  border-radius: 12px;
-  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.05);
-  line-height: 1.75;
-  font-size: 1rem;
-  color: #333;
-}
+    h2 {
+      margin-bottom: 30px;
+      color: #111;
+      font-size: 1.6rem;
+    }
 
-.feedback-wrapper h3 {
-  font-size: 1.25rem;
-  margin-top: 32px;
-  margin-bottom: 12px;
-  border-left: 4px solid #0070f3;
-  padding-left: 14px;
-  color: #111;
-}
+    .form-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 15px;
+      margin-bottom: 15px;
+    }
 
-.feedback-wrapper p {
-  margin-bottom: 16px;
-}
+    .form-row label {
+      flex: 1 0 100%;
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
 
-.feedback-wrapper .score-summary {
-  font-weight: 600;
-  margin-top: 10px;
-  margin-bottom: 20px;
-  font-size: 1rem;
-}
+    .form-row input[type="text"],
+    .form-row input[type="email"],
+    .form-row textarea {
+      flex: 1 0 100%;
+      padding: 10px;
+      border: 1px solid #ddd;
+      border-radius: 6px;
+      font-size: 1rem;
+    }
 
-.fix-section {
-  background: #f9fafe;
-  padding: 20px;
-  border-radius: 10px;
-  border-left: 4px solid #0070f3;
-  margin-bottom: 16px;
-}
+    .form-row textarea {
+      height: 120px;
+      resize: vertical;
+    }
 
-.fix-section h4 {
-  font-size: 1.05rem;
-  margin-bottom: 8px;
-  color: #333;
-}
+    #screenshot {
+      margin-top: 5px;
+    }
 
-.fix-section p {
-  margin: 0;
-  font-size: 0.95rem;
-  color: #444;
-}
+    button {
+      background: #0070f3;
+      color: #fff;
+      padding: 12px 24px;
+      border: none;
+      border-radius: 6px;
+      font-size: 1rem;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background: #005ad1;
+    }
+
+    #feedback {
+      margin-top: 30px;
+    }
+
+    .feedback-wrapper {
+      background: #fff;
+      padding: 25px;
+      border-radius: 10px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+      line-height: 1.75;
+      font-size: 1rem;
+      color: #333;
+    }
+
+    .feedback-wrapper h3 {
+      font-size: 1.2rem;
+      margin-top: 30px;
+      margin-bottom: 10px;
+      border-left: 4px solid #0070f3;
+      padding-left: 12px;
+      color: #111;
+    }
+
+    .feedback-wrapper p {
+      margin-bottom: 16px;
+    }
+
+    .score-summary {
+      font-weight: 600;
+      margin-top: 10px;
+      margin-bottom: 20px;
+      font-size: 1rem;
+    }
+
+    .fix-section {
+      background: #f9fafe;
+      padding: 20px;
+      border-radius: 10px;
+      border-left: 4px solid #0070f3;
+      margin-bottom: 16px;
+    }
+
+    .fix-section h4 {
+      font-size: 1.05rem;
+      margin-bottom: 8px;
+      color: #333;
+    }
+
+    .fix-section p {
+      margin: 0;
+      font-size: 0.95rem;
+      color: #444;
+    }
+
+    #downloadBtn {
+      margin-top: 20px;
+      display: none;
+      background: #28a745;
+    }
+
+    #downloadBtn:hover {
+      background: #208a36;
+    }
   </style>
 </head>
 <body>
 
   <div id="chatbox">
-    <h2>📩 Email Grader Assistant</h2>
+    <h2>📧 Email Grader Assistant</h2>
 
-    <label for="email">Your Email Address</label>
-    <input type="email" id="email" placeholder="you@example.com" required />
+    <div class="form-row">
+      <label for="email">Your Email Address</label>
+      <input type="email" id="email" placeholder="you@example.com" required />
+    </div>
 
-    <label for="subject">Subject Line</label>
-    <input type="text" id="subject" placeholder="Enter your email subject line" />
+    <div class="form-row">
+      <label for="subject">Subject Line</label>
+      <input type="text" id="subject" placeholder="Enter your email subject line" />
+    </div>
 
-    <label for="preview">Preview Text</label>
-    <input type="text" id="preview" placeholder="Enter the preview text" />
+    <div class="form-row">
+      <label for="preview">Preview Text</label>
+      <input type="text" id="preview" placeholder="Enter the preview text" />
+    </div>
 
-    <label for="body">Email Body</label>
-    <textarea id="body" rows="6" placeholder="Paste the body of your email here..."></textarea>
+    <div class="form-row">
+      <label for="body">Email Body</label>
+      <textarea id="body" placeholder="Paste the body of your email here..."></textarea>
+    </div>
 
-    <label for="screenshot">Screenshot Upload (optional)</label>
-    <input type="file" id="screenshot" accept="image/*" />
+    <div class="form-row">
+      <label for="screenshot">Screenshot Upload (optional)</label>
+      <input type="file" id="screenshot" accept="image/*" />
+    </div>
 
-    <button onclick="sendToAssistant()">Send for Review</button>
+    <div class="form-row">
+      <button onclick="sendToAssistant()">Send for Review</button>
+      <button id="downloadBtn">⬇️ Download Feedback</button>
+    </div>
 
     <div id="feedback"></div>
-
-    <button id="downloadBtn" style="display: none; margin-top: 10px;">
-  ⬇️ Download Results
-</button>
   </div>
 
   <script>
- let lastRawResponse = ""; // Add this outside the function if needed
+    let lastRawResponse = "";
 
-async function sendToAssistant() {
-  const email = document.getElementById("email").value;
-  const subject = document.getElementById("subject").value;
-  const preview = document.getElementById("preview").value;
-  const body = document.getElementById("body").value;
-  const screenshotInput = document.getElementById("screenshot");
-  const feedback = document.getElementById("feedback");
-  const downloadBtn = document.getElementById("downloadBtn");
+    async function sendToAssistant() {
+      const email = document.getElementById("email").value.trim();
+      const subject = document.getElementById("subject").value.trim();
+      const preview = document.getElementById("preview").value.trim();
+      const body = document.getElementById("body").value.trim();
+      const screenshotInput = document.getElementById("screenshot");
+      const feedback = document.getElementById("feedback");
+      const downloadBtn = document.getElementById("downloadBtn");
 
-  feedback.innerHTML = "🧠 Analyzing your email...";
-  downloadBtn.style.display = "none";
+      if (!email || !email.includes("@")) {
+        alert("Please enter a valid email address.");
+        return;
+      }
 
-  const formData = new FormData();
-  formData.append("email", email);
-  formData.append("subject", subject);
-  formData.append("preview", preview);
-  formData.append("body", body);
-  if (screenshotInput.files.length > 0) {
-    formData.append("screenshot", screenshotInput.files[0]);
-  }
+      feedback.innerHTML = "🧠 Analyzing your email...";
+      downloadBtn.style.display = "none";
 
-  try {
-    const res = await fetch("https://hook.us2.make.com/j7o5q5ro62u1zx6ahzmgd0s4b4oq8c3a", {
-      method: "POST",
-      body: formData
+      const formData = new FormData();
+      formData.append("email", email);
+      formData.append("subject", subject);
+      formData.append("preview", preview);
+      formData.append("body", body);
+      if (screenshotInput.files.length > 0) {
+        formData.append("screenshot", screenshotInput.files[0]);
+      }
+
+      try {
+        const res = await fetch("https://hook.us2.make.com/j7o5q5ro62u1zx6ahzmgd0s4b4oq8c3a", {
+          method: "POST",
+          body: formData
+        });
+
+        const raw = await res.text();
+        lastRawResponse = raw;
+
+        const formatted = raw
+          .replace(/🧠 The Idea/g, `<h3>🧠 The Idea</h3>`)
+          .replace(/✍️ The Copy/g, `<h3>✍️ The Copy</h3>`)
+          .replace(/🎨 The Design/g, `<h3>🎨 The Design</h3>`)
+          .replace(/📊 Overall Score/g, `<h3>📊 Overall Score</h3>`)
+          .replace(/🔧 Fixes to Improve Opens, Clicks & Conversions/g, `<h3>🔧 Fixes to Improve Opens, Clicks & Conversions</h3>`)
+          .replace(/\n•/g, '')
+          .replace(/^•\s*/gm, '')
+          .replace(/\n\n/g, '</p><p>')
+          .replace(/\n/g, '<br>')
+          .replace(/(\d{1,2}\/15 –.*?)<br>/, `<p class="score-summary">$1</p>`)
+          .replace(/(\d+\.\s)(.*?)\n\s*–\s(.*?)\n/g, (_, num, title, detail) => {
+            return `<div class="fix-section"><h4>${num}${title}</h4><p>${detail}</p></div>`;
+          });
+
+        feedback.innerHTML = `<div class="feedback-wrapper">${formatted}</div>`;
+        downloadBtn.style.display = "inline-block";
+
+      } catch (err) {
+        console.error("Fetch error:", err);
+        feedback.innerHTML = `<p style="color:red;">❌ There was an error processing your request.</p>`;
+      }
+    }
+
+    document.getElementById("downloadBtn").addEventListener("click", () => {
+      const blob = new Blob([lastRawResponse], { type: "text/plain" });
+      const link = document.createElement("a");
+      link.href = URL.createObjectURL(blob);
+      link.download = "ai-email-feedback.txt";
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
     });
-
-    const raw = await res.text();
-    lastRawResponse = raw;
-    console.log("Raw response:", raw);
-
-const formatted = raw
-  .replace(/🧠 The Idea/g, `<h3>🧠 The Idea</h3>`)
-  .replace(/✍️ The Copy/g, `<h3>✍️ The Copy</h3>`)
-  .replace(/🎨 The Design/g, `<h3>🎨 The Design</h3>`)
-  .replace(/📊 Overall Score/g, `<h3>📊 Overall Score</h3>`)
-  .replace(/🔧 Fixes to Improve Opens, Clicks & Conversions/g, `<h3>🔧 Fixes to Improve Opens, Clicks & Conversions</h3>`)
-
-  // Remove orphan bullets
-  .replace(/\n•/g, '')
-  .replace(/^•\s*/gm, '')
-
-  // Fix extra line breaks
-  .replace(/\n\n/g, '</p><p>')
-  .replace(/\n/g, '<br>')
-
-  // Highlight overall score summary
-  .replace(/(\d{1,2}\/15 –.*?)<br>/, `<p class="score-summary">$1</p>`)
-
-  // Format fixes section into styled blocks
-  .replace(/(\d+\.\s)(.*?)\n\s*–\s(.*?)\n/g, (_, num, title, detail) => {
-    return `<div class="fix-section"><h4>${num}${title}</h4><p>${detail}</p></div>`;
-  });
-
-feedback.innerHTML = `<div class="feedback-wrapper">${formatted}</div>`;
-    downloadBtn.style.display = "inline-block";
-
-  } catch (err) {
-    console.error("Fetch error:", err);
-    feedback.innerHTML = `<p style="color:red;">❌ There was an error processing your request.</p>`;
-  }
-}
   </script>
-  <script>
-  document.getElementById("downloadBtn").addEventListener("click", () => {
-    const blob = new Blob([lastRawResponse], { type: "text/plain" });
-    const link = document.createElement("a");
-    link.href = URL.createObjectURL(blob);
-    link.download = "ai-email-feedback.txt";
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-  });
-</script>
 
 </body>
 </html>
