@@ -130,7 +130,7 @@ async function sendToAssistant() {
       .map(section => `<div class="feedback-section">${section.replace(/\n/g, "<br>")}</div>`)
       .join("");
 
-    feedback.innerHTML = `<strong>AI Feedback:</strong><br><br>${formatted}`;
+    feedback.innerHTML = `<strong>Here's Your Audit Results:</strong><br><br>${formatted}`;
     downloadBtn.style.display = "inline-block";
 
   } catch (err) {
