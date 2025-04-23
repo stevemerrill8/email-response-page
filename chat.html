@@ -122,7 +122,7 @@
         .map(section => `<div class="feedback-section">${section.replace(/\n/g, "<br>")}</div>`)
         .join("");
 
-      feedback.innerHTML = `<strong>AI Feedback:</strong><br><br>${formatted}`;
+      feedback.innerHTML = `<strong>Here's Your Email Audit:</strong><br><br>${formatted}`;
     } catch (err) {
       console.error("Fetch error:", err);
       feedback.innerHTML = `<p style="color:red;">❌ There was an error processing your request.</p>`;
