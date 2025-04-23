@@ -80,52 +80,40 @@
 
   <script>
     async function sendToAssistant() {
-      const email = document.getElementById("email").value;
-      const subject = document.getElementById("subject").value;
-      const preview = document.getElementById("preview").value;
-      const body = document.getElementById("body").value;
-      const screenshotInput = document.getElementById("screenshot");
-      const feedback = document.getElementById("feedback");
+  const email = document.getElementById("email").value;
+  const subject = document.getElementById("subject").value;
+  const preview = document.getElementById("preview").value;
+  const body = document.getElementById("body").value;
+  const screenshotInput = document.getElementById("screenshot");
+  const feedback = document.getElementById("feedback");
 
-      feedback.innerHTML = "🧠 Analyzing your email...";
+  feedback.innerHTML = "🧠 Analyzing your email...";
 
-      const formData = new FormData();
-      formData.append("email", email);
-      formData.append("subject", subject);
-      formData.append("preview", preview);
-      formData.append("body", body);
-      if (screenshotInput.files.length > 0) {
-        formData.append("screenshot", screenshotInput.files[0]);
-      }
+  const formData = new FormData();
+  formData.append("email", email);
+  formData.append("subject", subject);
+  formData.append("preview", preview);
+  formData.append("body", body);
+  if (screenshotInput.files.length > 0) {
+    formData.append("screenshot", screenshotInput.files[0]);
+  }
 
-      try {
-        const res = await fetch("https://hook.us2.make.com/j7o5q5ro62u1zx6ahzmgd0s4b4oq8c3a", {
-          method: "POST",
-          body: formData
-        });
+  try {
+    const res = await fetch("https://hook.us2.make.com/j7o5q5ro62u1zx6ahzmgd0s4b4oq8c3a", {
+      method: "POST",
+      body: formData
+    });
 
-        const raw = await res.text(); // Get raw response for debugging
-        console.log("Raw response:", raw);
+    const raw = await res.text(); // Don’t parse as JSON
+    console.log("Raw response (as text):", raw);
 
-        try {
-          const data = JSON.parse(raw);
-          console.log("Parsed JSON:", data);
-
-          if (data.feedback) {
-            feedback.innerHTML = `<strong>Feedback:</strong><br>${data.feedback}`;
-          } else {
-            feedback.innerHTML = `<p style="color:red;">⚠️ No feedback returned. Check webhook response.</p>`;
-          }
-        } catch (parseError) {
-          console.error("JSON Parse Error:", parseError);
-          feedback.innerHTML = `<p style="color:red;">❌ Failed to parse response. Check your webhook output format.</p>`;
-        }
-
-      } catch (err) {
-        console.error("Fetch Error:", err);
-        feedback.innerHTML = `<p style="color:red;">❌ There was an error sending your request. Please try again later.</p>`;
-      }
-    }
+    // Inject the raw response directly as HTML into the page
+    feedback.innerHTML = `<strong>AI Feedback:</strong><br><br>${raw}`;
+  } catch (err) {
+    console.error("Fetch error:", err);
+    feedback.innerHTML = `<p style="color:red;">❌ There was an error processing your request.</p>`;
+  }
+}
   </script>
 
 </body>
